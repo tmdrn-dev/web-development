@@ -19,18 +19,6 @@ h3 {
     padding-top: 100px;
 }
 
-.middle-container {
-    background-color: red;
-    height: 200px;
-    width: 200px;
-}
-
-.bottom-container {
-    background-color: gold;
-    height: 200px;
-    width: 200px;
-}
-
 .top-cloud {
     position: absolute;
     right: 250px;
@@ -41,4 +29,24 @@ h3 {
     position: absolute;
     left: 250px;
     bottom: 350px;
+}
+
+.middle-container {
+    position: relative;
+}
+
+.profile_img {
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+
+.skills_img {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+.bottom-container {
+    position: relative;
 }

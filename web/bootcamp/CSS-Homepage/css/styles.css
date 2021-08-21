@@ -2,6 +2,7 @@ body {
     margin: 0;
     text-align: center;
     font-family: 'Merriweather Sans', sans-serif;
+    color:#40515E;
 }
 
 h1 {
@@ -24,14 +25,20 @@ h3 {
 
 a {
     color: #11999E;
+    text-decoration: none;
+}
+
+a:hover {
+    color:#E4F9F5;
 }
 
 hr {
     border-style: none;
     border-top-style: dotted;
     border-width: thick;
-    border-color: #EAF6F6;
-    width: 2rem;
+    border-color: #e7e7e7;
+    width: 3rem;
+    margin: 4rem auto;
 }
 
 .top-container {
@@ -42,6 +49,10 @@ hr {
 
 .profile {
     line-height: 2;
+}
+
+.profile p {
+    margin: 2rem auto;
 }
 
 .top-cloud {
@@ -57,30 +68,68 @@ hr {
 }
 
 .middle-container {
-    position: relative;
 }
 
 .profile_img {
-    width: 25%;
-    position: relative;
+    width: 15%;
 }
 
 .skill-row {
-    width: 50%;
-    margin: 50px auto;
-    text-align: left;
+    margin: 6rem auto;
 }
 
 .skill-row img {
-    width: 25%;
-    float: left;
-    margin-right: 30px;
+    width: 7%;
+    position: absolute;
+    left: 38%;
 }
 
-.skills div {
-    margin: 0 auto 150px auto;
+.skill-description {
+    width: 40%;
+    position: relative;
+    left: 55%;
+    text-align: left;
 }
 
 .bottom-container {
     position: relative;
+    background-color: #66BFBF;
+    color: #EAF6F6;
+    padding: 3rem;
+    margin: 4rem auto 0 auto;
+}
+
+.bottom-container p {
+    margin: 3rem auto 0 auto;
+    font-size: smaller;
+}
+
+.footer-link {
+    margin: auto 1rem;
+}
+
+.BUTTON_LBC {
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    color: #FFFFFF;
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 10px;
+    background-color: #11999E;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    margin: 2rem auto;
+}
+
+.BUTTON_LBC:hover {
+    background: #15B5A5;
+    border: solid #337FED 0;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    text-decoration: none;
 }

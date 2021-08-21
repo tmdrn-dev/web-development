@@ -26,6 +26,14 @@ a {
     color: #11999E;
 }
 
+hr {
+    border-style: none;
+    border-top-style: dotted;
+    border-width: thick;
+    border-color: #EAF6F6;
+    width: 2rem;
+}
+
 .top-container {
     background-color: #E4F9F5;
     position: relative;
@@ -69,8 +77,8 @@ a {
     margin-right: 30px;
 }
 
-.skills div:last-child {
-    margin-bottom: 100px;
+.skills div {
+    margin: 0 auto 150px auto;
 }
 
 .bottom-container {

@@ -51,3 +51,31 @@ body {
 .title-image {
   width: 60%;
 }
+
+/* Features */
+#features {
+  padding: 7% 15%;
+}
+
+#features .col-lg-4 {
+  text-align: center;
+}
+
+#features .fas {
+  color: #ef8172;
+  margin-bottom: 1rem;
+}
+
+#features .fas:hover {
+  color: #ff4c68;
+}
+
+#features h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+#features p {
+  color: #8f8f8f;
+}

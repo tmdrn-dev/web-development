@@ -25,6 +25,10 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+p {
+  color: #8f8f8f;
+}
+
 .container-fluid {
   padding: 3% 15%;
 }
@@ -83,10 +87,6 @@ body {
   font-weight: 700;
 }
 
-#features p {
-  color: #8f8f8f;
-}
-
 /* Testmonial Section */
 #testimonials {
   text-align: center;
@@ -113,4 +113,13 @@ body {
 #press img {
   width: 15%;
   margin: 20px 20px 50px;
+}
+
+/* Pricing Section */
+#pricing {
+  padding: 100px;
+}
+
+#pricing .col-lg-4 {
+  padding: 3% 2%;
 }

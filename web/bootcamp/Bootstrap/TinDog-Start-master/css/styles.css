@@ -1,7 +1,3 @@
-.image-container {
-  text-align: center;
-}
-
 #title {
   background-color: #ff4c68;
   color: white;
@@ -61,11 +57,13 @@ p {
 /* Title image  */
 .title-image {
   width: 60%;
+  transform: rotate(25deg);
 }
 
 /* Features */
 #features {
   padding: 7% 15%;
+  background-color: #fff;
 }
 
 #features .col-lg-4 {
@@ -122,4 +120,14 @@ p {
 
 #pricing .col-lg-4 {
   padding: 3% 2%;
+}
+
+@media (max-width: 991px) {
+  #title {
+    text-align: center;
+  }
+  .title-image {
+    transform: rotate(0);
+    width: 50%;
+  }
 }

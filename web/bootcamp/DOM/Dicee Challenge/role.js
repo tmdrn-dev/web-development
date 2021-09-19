@@ -16,7 +16,7 @@ function getWinner(p1, p2) {
 }
 
 function setDiceImg(idx, value) {
-  diceImg[idx].src = "images/dice" + value + ".png";
+  diceImg[idx].setAttribute("src", "images/dice" + value + ".png");
 }
 
 function onBtnClick() {

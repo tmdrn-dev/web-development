@@ -11,8 +11,17 @@ function playAudio(path) {
   audioSource.play();
 }
 
+function buttonAnimation(keyName) {
+  const activeButton = document.querySelector("." + keyName);
+  activeButton.classList.add("pressed");
+  setTimeout(function () {
+    activeButton.classList.remove("pressed");
+  }, 100);
+}
+
 function onKeyDown(event) {
   const keyName = event.key;
+  buttonAnimation(keyName);
   console.log(keyName);
 
   switch (keyName) {
@@ -50,6 +59,9 @@ function onKeyDown(event) {
     case "L":
       playAudio(SOUND_SNARE);
       break;
+
+    default:
+      console.log(keyName);
   }
 }
 

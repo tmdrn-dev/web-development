@@ -1,31 +1,17 @@
+let gameStart = false;
+let gamePause = false;
+let gameLevel = 0;
+
+let simonQueue = [];
+let userStage = 0;
+
 function updateTitle(text) {
-  let h1 = document.querySelector("h1");
-  h1.innerHTML = text;
-}
-
-function findButtonByColor(color) {
-  let buttons = document.querySelectorAll(".btn");
-  for (let i = 0; i < buttons.length; i++) {
-    if (buttons[i].innerText === color)
-      return buttons[i];
-  }
-}
-
-function clickButton(target) {
-  target.classList.add("pressed");
-  setTimeout(function () {
-    target.classList.remove("pressed");
-  }, 100);
-}
-
-function playSound(fileName) {
-  let audio = new Audio(`sounds/${fileName}.mp3`);
-  audio.play();
+  $("h1").html(text);
 }
 
 function getRandomButtonColor() {
-  let randomNumber = Math.floor(Math.random()*4);
-  switch(randomNumber) {
+  let randomNumber = Math.floor(Math.random() * 4);
+  switch (randomNumber) {
     case 0:
       return "green";
     case 1:
@@ -41,13 +27,12 @@ function levelUp() {
   gamePause = true;
   gameLevel += 1;
   updateTitle("Level " + gameLevel);
-  
-  let color = getRandomButtonColor();
-  let button = findButtonByColor(color);
 
-  setTimeout(function() {
-    clickButton(button);
-    playSound(color);
+  let color = getRandomButtonColor();
+  let button = FindButtonByColor(color);
+
+  setTimeout(function () {
+    button.Click();
     simonQueue.push(color);
     console.log(simonQueue);
   }, 1000);
@@ -56,13 +41,13 @@ function levelUp() {
 }
 
 function matchColor(userPickedColor) {
-  console.log(userPickedColor, simonQueue[userStage])
+  console.log(userPickedColor, simonQueue[userStage]);
   if (userPickedColor != simonQueue[userStage]) {
     stopGame();
     return;
   }
 
-  if (userStage === simonQueue.length-1) {
+  if (userStage === simonQueue.length - 1) {
     userStage = 0;
     levelUp();
   } else {
@@ -72,6 +57,7 @@ function matchColor(userPickedColor) {
 
 function startGame() {
   console.log("Start Game!");
+  gameStart = true;
   levelUp();
 }
 

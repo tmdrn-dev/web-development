@@ -1,28 +1,23 @@
-function onKeyDown(event) {
-  if(event.code === "Space") {
+function onGlobalKeyDown(event) {
+  if (event.code === "Space") {
     event.preventDefault();
   }
 
   if (gameStart === false) {
-    gameStart = true;
     startGame();
   }
 }
 
-function onBtnClick(event) {
+function onButtonClick(event) {
   if (gameStart === false || gamePause === true) {
     return;
   }
 
-  let button = event.target;
-  clickButton(button);
-  playSound(button.innerText);
-  matchColor(button.innerText);
+  const color = event.target.innerText;
+  const button = FindButtonByColor(color);
+  button.Click();
+  matchColor(button.color);
 }
 
-document.addEventListener("keydown", onKeyDown);
-
-let buttons = document.querySelectorAll(".btn");
-for (let i = 0; i < buttons.length; i++) {
-  buttons[i].addEventListener("click", onBtnClick);
-}
+$(".btn").on("click", onButtonClick);
+$(document).on("keydown", onGlobalKeyDown);

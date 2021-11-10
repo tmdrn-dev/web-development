@@ -2,11 +2,18 @@ const express = require("express");
 const https = require("https");
 
 const app = express();
-
-const openweathermapUrl =
-  "https://api.openweathermap.org/data/2.5/weather?q=seoul&appid=8f0ba11f8e0f1047f385635a8156bbff&units=metric";
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", function (req, res) {
+  res.sendFile(__dirname + "/index.html");
+});
+
+app.post("/", function (req, res) {
+  const city = req.body.cityName;
+  const appId = "8f0ba11f8e0f1047f385635a8156bbff";
+  const units = "metric";
+  const openweathermapUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${appId}&units=${units}`;
+
   https.get(openweathermapUrl, function (weatherRes) {
     console.log(res.statusCode);
     weatherRes.on("data", (data) => {

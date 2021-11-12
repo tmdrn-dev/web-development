@@ -1,4 +1,5 @@
 const express = require("express");
+const https = require("https");
 const app = express();
 const appPort = 3000;
 
@@ -10,11 +11,44 @@ app.get("/", function (req, res) {
 });
 
 app.post("/", function (req, res) {
-  console.log(req.body.firstName);
-  console.log(req.body.lastName);
-  console.log(req.body.email);
+  const firstName = req.body.fName;
+  const lastName = req.body.lName;
+  const email = req.body.email;
+  const data = {
+    members: [
+      {
+        email_address: email,
+        status: "subscribed",
+        merge_fields: {
+          FNAME: firstName,
+          LNAME: lastName,
+        },
+      },
+    ],
+  };
+
+  const url = "https://us20.api.mailchimp.com/3.0/lists/52d0bfaedc";
+  const options = {
+    method: "post",
+    auth: "seungku:33cc250fb5672d25264307aca2a78a6d-us20",
+  };
+  const request = https.request(url, options, function (response) {
+    response.on("data", function (data) {
+      console.log(JSON.parse(data));
+    });
+  });
+
+  const jsonData = JSON.stringify(data);
+  request.write(jsonData);
+  request.end();
 });
 
 app.listen(appPort, function () {
   console.log(`Server is running on port:${appPort}`);
 });
+
+// mailchimps API
+// 33cc250fb5672d25264307aca2a78a6d-us20
+
+// list ID
+// 52d0bfaedc

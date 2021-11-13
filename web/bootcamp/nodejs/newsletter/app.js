@@ -32,7 +32,14 @@ app.post("/", function (req, res) {
     method: "post",
     auth: "seungku:33cc250fb5672d25264307aca2a78a6d-us20",
   };
+
   const request = https.request(url, options, function (response) {
+    if (response.statusCode === 200) {
+      res.sendFile(__dirname + "/success.html");
+    } else {
+      res.sendFile(__dirname + "/failure.html");
+    }
+
     response.on("data", function (data) {
       console.log(JSON.parse(data));
     });
@@ -43,12 +50,10 @@ app.post("/", function (req, res) {
   request.end();
 });
 
-app.listen(appPort, function () {
-  console.log(`Server is running on port:${appPort}`);
+app.post("/failure", function (req, res) {
+  res.redirect("/");
 });
 
-// mailchimps API
-// 33cc250fb5672d25264307aca2a78a6d-us20
-
-// list ID
-// 52d0bfaedc
+app.listen(appPort, function () {
+  console.log(`Server is running`);
+});

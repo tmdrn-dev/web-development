@@ -7,6 +7,11 @@
     <title>To Do List</title>
   </head>
   <body>
-    <h1>It's a <%=kindOfDay%>!</h1>
+    <!-- EJS script!! -->
+    <% if (kindOfDay === "Saturday" || kindOfDay === "Sunday") { %>
+    <h1 style="color: red">It's a <%=kindOfDay%>!</h1>
+    <% } else { %>
+    <h1 style="color: blue">It's a <%=kindOfDay%>!</h1>
+    <% } %>
   </body>
 </html>

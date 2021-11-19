@@ -6,7 +6,8 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 // Global variables
-let itemList = [];
+let todoList = [];
+let workList = [];
 
 app.get("/", function (req, res) {
   let weekday = [
@@ -28,15 +29,33 @@ app.get("/", function (req, res) {
   };
 
   let today = date.toLocaleDateString("en-US", options);
-  res.render("list", { kindOfDay: today, todoList: itemList });
+  res.render("list", { listTitle: today, todoList: todoList });
 });
 
 app.post("/", function (req, res) {
-  let newItem = req.body.newItem;
-  console.log(newItem);
-  itemList.push(newItem);
+  let item = req.body.newItem;
+  if (req.body.list === "work") {
+    workList.push(item);
+    res.redirect("/work");
+  } else {
+    todoList.push(item);
+    res.redirect("/");
+  }
+});
 
-  res.redirect("/");
+app.get("/work", function (req, res) {
+  res.render("list", { listTitle: "work List", todoList: workList });
+});
+
+app.post("/work", function (req, res) {
+  let item = req.body.newItem;
+  workList.push(item);
+
+  res.redirect("/work");
+});
+
+app.get("/about", function (req, res) {
+  res.render("about");
 });
 
 app.listen(3000, function () {

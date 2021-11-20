@@ -1,4 +1,5 @@
 const express = require("express");
+const date = require(__dirname + "/date.js");
 const app = express();
 
 app.use("/", express.static(__dirname + "/public"));
@@ -6,29 +7,11 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 // Global variables
-let todoList = [];
-let workList = [];
+const todoList = [];
+const workList = [];
 
 app.get("/", function (req, res) {
-  let weekday = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  let date = new Date();
-  let options = {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  };
-
-  let today = date.toLocaleDateString("en-US", options);
+  let today = date.getDate();
   res.render("list", { listTitle: today, todoList: todoList });
 });
 

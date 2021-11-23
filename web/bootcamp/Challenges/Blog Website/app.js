@@ -54,6 +54,15 @@ app.post("/compose", function (req, res) {
   res.redirect("/");
 });
 
+app.get("/posts/:postTitle", function(req, res) {
+  const post = posts.find(post => post.title === req.params.postTitle);
+  console.log(post);
+  if (post === undefined) {
+    console.log("UNDEFINED!!!!!!!!!!");
+  }
+  res.redirect('/');
+})
+
 app.listen(3000, function () {
   console.log("Server started on port 3000");
 });

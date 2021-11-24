@@ -1,6 +1,7 @@
 //jshint esversion:6
 
 const express = require("express");
+const _ = require("lodash");
 const app = express();
 
 app.set("view engine", "ejs");
@@ -55,12 +56,14 @@ app.post("/compose", function (req, res) {
 });
 
 app.get("/posts/:postTitle", function(req, res) {
-  const post = posts.find(post => post.title === req.params.postTitle);
-  console.log(post);
+  const postTitle = _.lowerCase(req.params.postTitle);
+  const post = posts.find(post => _.lowerCase(post.title) === postTitle);
   if (post === undefined) {
-    console.log("UNDEFINED!!!!!!!!!!");
+    console.log("undefined route: " + postTitle);
+    res.status(404).render("404");
+  } else {
+    res.render("post", {post: post});
   }
-  res.redirect('/');
 })
 
 app.listen(3000, function () {

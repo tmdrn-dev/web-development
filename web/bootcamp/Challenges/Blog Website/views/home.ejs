@@ -4,7 +4,10 @@
 
       <% postContent.forEach(function(post) { %>
         <h3><%=post.title%></h3>
-        <p><%=post.content%></p>
+        <p>
+          <%=post.summary%>
+          <a href="/posts/<%=post.title%>"> Read More</a>
+        </p>
       <% }) %>
 
 <%- include('partials/footer'); -%>

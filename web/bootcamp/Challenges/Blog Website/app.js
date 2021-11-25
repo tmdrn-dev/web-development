@@ -2,6 +2,7 @@
 
 const express = require("express");
 const _ = require("lodash");
+const truncate = require(__dirname + "/truncate");
 const app = express();
 
 app.set("view engine", "ejs");
@@ -48,6 +49,7 @@ app.get("/compose", function (req, res) {
 app.post("/compose", function (req, res) {
   const post = {
     title: req.body.postTitle,
+    summary: truncate.summary(req.body.postBody),
     content: req.body.postBody,
   };
 
@@ -59,7 +61,7 @@ app.get("/posts/:postTitle", function(req, res) {
   const postTitle = _.lowerCase(req.params.postTitle);
   const post = posts.find(post => _.lowerCase(post.title) === postTitle);
   if (post === undefined) {
-    console.log("undefined route: " + postTitle);
+    console.error("undefined route: " + postTitle);
     res.status(404).render("404");
   } else {
     res.render("post", {post: post});

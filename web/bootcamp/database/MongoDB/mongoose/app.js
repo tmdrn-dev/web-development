@@ -1,53 +1,89 @@
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/fruitDB');
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost:27017/fruitDB");
 
 const fruitSchema = mongoose.Schema({
-    name: String,
-    rating: Number,
-    review: String
-})
-
-const Fruit = mongoose.model('Fruit', fruitSchema);
-
-const apple = new Fruit({ 
-    name: 'Apple',
-    rating: 7,
-    review: "Pretty solid as a fruit."
+  name: {
+    type: String,
+    required: true,
+  },
+  rating: Number,
+  review: String,
 });
 
-const kiwi = new Fruit({ 
-    name: 'Kiwi',
-    rating: 6,
-    review: "Pretty solid as a fruit."
+const Fruit = mongoose.model("Fruit", fruitSchema);
+
+const apple = new Fruit({
+  name: "Apple",
+  rating: 7,
+  review: "Pretty solid as a fruit.",
 });
 
-const banana = new Fruit({ 
-    name: 'Banana',
-    rating: 5,
-    review: "Pretty solid as a fruit."
+const kiwi = new Fruit({
+  name: "Kiwi",
+  rating: 6,
+  review: "Pretty solid as a fruit.",
+});
+
+const banana = new Fruit({
+  name: "Banana",
+  rating: 5,
+  review: "Pretty solid as a fruit.",
 });
 
 // Insert many documents
-const arr = [apple, kiwi, banana];
-Fruit.insertMany(arr, function(error, docs) {
-    if (error) {
-        console.error("error: " + error);
-    } else {
-        console.log("Saved successfully.");
-    }
-    // console.log("docs: " + docs);
+// const arr = [apple, kiwi, banana];
+// Fruit.insertMany(arr, function(error, docs) {
+//     if (error) {
+//         console.error("error: " + error);
+//     } else {
+//         console.log("Saved successfully.");
+//     }
+//     // console.log("docs: " + docs);
+// });
+
+// Fruit.deleteOne({ name: "Peach" });
+
+Fruit.find(function (error, fruits) {
+  if (error) {
+    console.error(error);
+  } else {
+    // 2 way Disconnecting connections
+    // mongoose.connection.close();
+    // mongoose.disconnect();
+    fruits.forEach(function (fruit) {
+      if (fruit.name === undefined) {
+        // fruit.name = "Peach";
+        // fruit.save();
+      } else {
+        console.log(fruit.name);
+      }
+    });
+  }
 });
 
 const personSchema = mongoose.Schema({
-    name: String,
-    age: Number
-})
+  name: {
+    type: String,
+    required: [true, "Please check name field"],
+  },
+  age: Number,
+  rating: {
+    type: Number,
+    min: 1,
+    max: 10,
+  },
+});
 
-const Person = mongoose.model('Person', personSchema);
+const Person = mongoose.model("Person", personSchema);
 const person = new Person({
-    name: "Jonh",
-    age: 37
-})
+  name: "John",
+  age: 37,
+  rating: 5,
+});
 
 // Insert only one document
-person.save();
+// person.save();
+
+Person.deleteMany({ name: "Tom", age: { $gte: 40 } }, function (err) {
+  console.error(err);
+});

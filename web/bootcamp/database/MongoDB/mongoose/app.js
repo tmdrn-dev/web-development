@@ -41,7 +41,19 @@ const banana = new Fruit({
 //     // console.log("docs: " + docs);
 // });
 
+// Delete document
 // Fruit.deleteOne({ name: "Peach" });
+
+// Update document
+// Fruit.updateOne(
+//   { _id: "61a60dc7ea06f05bbc024230" },
+//   { review: "Best fruit in my life" },
+//   function (err) {
+//     if (err) {
+//       console.error(err);
+//     }
+//   }
+// );
 
 Fruit.find(function (error, fruits) {
   if (error) {
@@ -85,5 +97,7 @@ const person = new Person({
 // person.save();
 
 Person.deleteMany({ name: "Tom", age: { $gte: 40 } }, function (err) {
-  console.error(err);
+  if (err) {
+    console.error(err);
+  }
 });

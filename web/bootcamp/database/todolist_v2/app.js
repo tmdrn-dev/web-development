@@ -1,18 +1,37 @@
 const express = require("express");
-const date = require(__dirname + "/date.js");
+const mongoose = require("mongoose");
 const app = express();
 
 app.use("/", express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
+mongoose.connect("mongodb://localhost:27017/todoListDB");
+const TodoItemSchem = { name: String };
+const TodoItem = mongoose.model("TodoItem", TodoItemSchem);
+
+const item_1 = new TodoItem({
+  name: "Sleep on time",
+});
+const item_2 = new TodoItem({
+  name: "Work hard",
+});
+const item_3 = new TodoItem({
+  name: "Study harder",
+});
+
+// const todoList = [item_1, item_2, item_3];
+// TodoItem.insertMany(todoList, function (err) {
+//   if (err) {
+//     console.error(err);
+//   }
+// });
+
 // Global variables
-const todoList = [];
 const workList = [];
 
 app.get("/", function (req, res) {
-  let today = date.getDate();
-  res.render("list", { listTitle: today, todoList: todoList });
+  res.render("list", { listTitle: "Today", todoList: todoList });
 });
 
 app.post("/", function (req, res) {

@@ -79,22 +79,30 @@ const personSchema = mongoose.Schema({
     required: [true, "Please check name field"],
   },
   age: Number,
-  rating: {
-    type: Number,
-    min: 1,
-    max: 10,
-  },
+  favoriteFruit: fruitSchema,
 });
 
 const Person = mongoose.model("Person", personSchema);
-const person = new Person({
-  name: "John",
-  age: 37,
-  rating: 5,
-});
+// const person = new Person({
+//   name: "Amy",
+//   age: 12,
+//   favoriteFruit: apple,
+// });
 
 // Insert only one document
 // person.save();
+
+// Update document
+Person.updateOne(
+  // { _id: "61a60dc7ea06f05bbc024233" },
+  { name: "Jonh" },
+  { favoriteFruit: banana },
+  function (err) {
+    if (err) {
+      console.error(err);
+    }
+  }
+);
 
 Person.deleteMany({ name: "Tom", age: { $gte: 40 } }, function (err) {
   if (err) {

@@ -7,12 +7,12 @@
 
     <div class="box">
       <!-- EJS script!! -->
-      <% for (let i=0; i<todoList.length; i++) { %>
+      <% todoList.forEach(function(item) { %>
         <div class="item">
           <input type="checkbox">
-          <p><%=todoList[i]%></p>
+          <p><%=item.name%></p>
         </div>
-        <%} %>
+        <% }) %>
 
         <form class="item" action="/" method="post">
           <input type="text" name="newItem" placeholder="New Item" autocomplete="off"/>

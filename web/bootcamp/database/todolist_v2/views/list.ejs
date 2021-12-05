@@ -8,11 +8,13 @@
     <div class="box">
       <!-- EJS script!! -->
       <% todoList.forEach(function(item) { %>
-        <div class="item">
-          <input type="checkbox">
-          <p><%=item.name%></p>
-        </div>
-        <% }) %>
+        <form action="/delete" method="post">
+          <div class="item">
+            <input type="checkbox" name="checked" value=<%=item.id%> onchange="this.form.submit()">
+            <p><%=item.name%></p>
+          </div>
+        </form>
+      <% }) %>
 
         <form class="item" action="/" method="post">
           <input type="text" name="newItem" placeholder="New Item" autocomplete="off"/>

@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 const app = express();
 
 app.use("/", express.static(__dirname + "/public"));
@@ -10,15 +11,19 @@ mongoose.connect("mongodb://localhost:27017/todoListDB");
 const TodoItemSchem = { name: String };
 const TodoItem = mongoose.model("TodoItem", TodoItemSchem);
 
-const item_1 = new TodoItem({
+const UserItemSchem = { name: String, items: [TodoItemSchem] };
+const UserItem = mongoose.model("UserItem", UserItemSchem);
+
+const todoItem_1 = new TodoItem({
   name: "Sleep on time",
 });
-const item_2 = new TodoItem({
+const todoItem_2 = new TodoItem({
   name: "Work hard",
 });
-const item_3 = new TodoItem({
+const todoItem_3 = new TodoItem({
   name: "Study harder",
 });
+const todoItemList = [todoItem_1, todoItem_2, todoItem_3];
 
 app.get("/", function (req, res) {
   TodoItem.find(function (err, items) {
@@ -26,8 +31,7 @@ app.get("/", function (req, res) {
       console.error(err);
     } else {
       if (items.length === 0) {
-        const itemList = [item_1, item_2, item_3];
-        TodoItem.insertMany(itemList, function (err) {
+        TodoItem.insertMany(todoItemList, function (err) {
           if (err) {
             console.error(err);
           }
@@ -41,20 +45,42 @@ app.get("/", function (req, res) {
 
 app.post("/", function (req, res) {
   let itemName = req.body.newItem;
-  const todoItem = new TodoItem({name: itemName});
+  const todoItem = new TodoItem({ name: itemName });
   todoItem.save();
   res.redirect("/");
 });
 
 app.post("/delete", function (req, res) {
   let itemId = req.body.checked;
-  TodoItem.findByIdAndRemove(itemId, function(err) {
-  //TodoItem.deleteOne({id:itemId}, function(err) {
-    if (err)
-      console.error(err);
+  TodoItem.findByIdAndRemove(itemId, function (err) {
+    //TodoItem.deleteOne({id:itemId}, function(err) {
+    if (err) console.error(err);
   });
 
   res.redirect("/");
+});
+
+app.get("/:userList", function (req, res) {
+  const userListTitle = req.params.userList;
+  UserItem.findOne({ name: userListTitle }, function (err, userList) {
+    if (err) {
+      console.error(err);
+    } else {
+      if (userList) {
+        res.render("list", {
+          listTitle: userList.name,
+          todoList: userList.items,
+        });
+      } else {
+        const userItem = new UserItem({
+          name: userListTitle,
+          items: todoItemList,
+        });
+        userItem.save();
+        res.redirect("/" + userListTitle);
+      }
+    }
+  });
 });
 
 // Global variables

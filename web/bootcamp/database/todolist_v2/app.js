@@ -45,9 +45,23 @@ app.get("/", function (req, res) {
 
 app.post("/", function (req, res) {
   let itemName = req.body.newItem;
+  let listName = req.body.list;
   const todoItem = new TodoItem({ name: itemName });
-  todoItem.save();
-  res.redirect("/");
+
+  if (listName === "Today") {
+    todoItem.save();
+    res.redirect("/");
+  } else {
+    UserItem.findOne({ name: listName }, function (err, userList) {
+      if (err) {
+        console.error(err);
+      } else {
+        userList.items.push(todoItem);
+        userList.save();
+        res.redirect("/" + listName);
+      }
+    });
+  }
 });
 
 app.post("/delete", function (req, res) {
@@ -62,6 +76,10 @@ app.post("/delete", function (req, res) {
 
 app.get("/:userList", function (req, res) {
   const userListTitle = req.params.userList;
+  if (userListTitle === "favicon.ico") {
+    res.status(204).end();
+  }
+
   UserItem.findOne({ name: userListTitle }, function (err, userList) {
     if (err) {
       console.error(err);
@@ -82,19 +100,6 @@ app.get("/:userList", function (req, res) {
     }
   });
 });
-
-// Global variables
-// const workList = [];
-// app.get("/work", function (req, res) {
-//   res.render("list", { listTitle: "work List", todoList: workList });
-// });
-
-// app.post("/work", function (req, res) {
-//   let item = req.body.newItem;
-//   workList.push(item);
-
-//   res.redirect("/work");
-// });
 
 // app.get("/about", function (req, res) {
 //   res.render("about");

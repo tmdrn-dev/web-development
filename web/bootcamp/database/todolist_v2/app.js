@@ -97,31 +97,31 @@ app.post("/delete", function (req, res) {
 });
 
 app.get("/:userList", function (req, res) {
-  const userListTitle = req.params.userList;
-  if (userListTitle === "favicon.ico") {
-    //res.status(204).end();
-    return;
-  }
-
-  UserItem.findOne({ name: userListTitle }, function (err, userList) {
-    if (err) {
-      console.error(err);
-    } else {
-      if (userList) {
-        res.render("list", {
-          listTitle: userList.name,
-          todoList: userList.items,
-        });
+  if (req.params.userList === "favicon.ico") {
+    res.status(204);
+  } else {
+    const userListTitle = _.capitalize(req.params.userList);
+    console.log(userListTitle);
+    UserItem.findOne({ name: userListTitle }, function (err, userList) {
+      if (err) {
+        console.error(err);
       } else {
-        const userItem = new UserItem({
-          name: userListTitle,
-          items: todoItemList,
-        });
-        userItem.save();
-        res.redirect("/" + userListTitle);
+        if (userList) {
+          res.render("list", {
+            listTitle: userList.name,
+            todoList: userList.items,
+          });
+        } else {
+          const userItem = new UserItem({
+            name: userListTitle,
+            items: todoItemList,
+          });
+          userItem.save();
+          res.redirect("/" + userListTitle);
+        }
       }
-    }
-  });
+    });
+  }
 });
 
 // app.get("/about", function (req, res) {

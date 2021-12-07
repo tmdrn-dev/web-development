@@ -44,8 +44,8 @@ app.get("/", function (req, res) {
 });
 
 app.post("/", function (req, res) {
-  let itemName = req.body.newItem;
-  let listName = req.body.list;
+  const itemName = req.body.newItem;
+  const listName = req.body.list;
   const todoItem = new TodoItem({ name: itemName });
 
   if (listName === "Today") {
@@ -65,19 +65,42 @@ app.post("/", function (req, res) {
 });
 
 app.post("/delete", function (req, res) {
-  let itemId = req.body.checked;
-  TodoItem.findByIdAndRemove(itemId, function (err) {
-    //TodoItem.deleteOne({id:itemId}, function(err) {
-    if (err) console.error(err);
-  });
+  const itemId = req.body.checked;
+  const listName = req.body.list;
 
-  res.redirect("/");
+  if (listName === "Today") {
+    TodoItem.findByIdAndRemove(itemId, function (err) {
+      //TodoItem.deleteOne({id:itemId}, function(err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/");
+    });
+  } else {
+    // Update(remove) item using $pull operator
+    UserItem.findOneAndUpdate(
+      { name: listName },
+      {
+        $pull: {
+          items: { _id: itemId },
+        },
+      },
+      function (err, userList) {
+        if (err) {
+          console.error(err);
+        } else {
+          res.redirect("/" + listName);
+        }
+      }
+    );
+  }
 });
 
 app.get("/:userList", function (req, res) {
   const userListTitle = req.params.userList;
   if (userListTitle === "favicon.ico") {
-    res.status(204).end();
+    //res.status(204).end();
+    return;
   }
 
   UserItem.findOne({ name: userListTitle }, function (err, userList) {

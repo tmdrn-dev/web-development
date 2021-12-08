@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const account = require(__dirname + "/account");
 const _ = require("lodash");
 const app = express();
 
@@ -7,7 +8,10 @@ app.use("/", express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb://localhost:27017/todoListDB");
+mongoose.connect(
+  // It doesn't seem to work if account.passwd contains !@#$
+  `mongodb+srv://${account.id}:${account.passwd}@cluster0.zzv9r.mongodb.net/todoListDB?retryWrites=true&w=majority`
+);
 const TodoItemSchem = { name: String };
 const TodoItem = mongoose.model("TodoItem", TodoItemSchem);
 

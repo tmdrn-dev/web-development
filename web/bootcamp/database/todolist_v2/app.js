@@ -132,6 +132,10 @@ app.get("/:userList", function (req, res) {
 //   res.render("about");
 // });
 
-app.listen(3000, function () {
+let PORT = process.env.PORT;
+if (PORT == null || port == "") {
+  port = 3000;
+}
+app.listen(PORT, function () {
   console.log("Server is running");
 });

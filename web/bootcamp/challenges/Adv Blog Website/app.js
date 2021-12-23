@@ -27,7 +27,7 @@ const homeContent = new SystemContent({
   body: "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.",
 });
 const aboutContent = new SystemContent({
-  title: "home",
+  title: "about",
   body: "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.",
 });
 const contactContent = new SystemContent({
@@ -36,22 +36,33 @@ const contactContent = new SystemContent({
 });
 const systemContents = [homeContent, aboutContent, contactContent];
 
+SystemContent.find(function (err, docs) {
+  if (docs) {
+    if (docs.length === 0) {
+      SystemContent.insertMany(systemContents, function (err) {
+        if (err) {
+          console.log("error: " + err);
+        }
+      });
+    }
+  }
+});
 // Need to Fix (findOne)
-function findContentByTitle(title, database) {
-  return database.find((element) => element.title == title);
-}
-
-function contentObject(content) {
-  this.title = _.capitalize(content.title);
-  this.body = content.body;
+function findContentByTitle(title, array) {
+  return array.find((element) => element.title == _.lowerCase(title));
 }
 
 // Need to Fix (insertMany or find)
 app.get("/", function (req, res) {
-  const title = "home";
-  const content = findContentByTitle(title, systemDatabase);
-  res.render(title, {
-    contents: new contentObject(content),
+  const query = SystemContent.where({ title: "home" });
+  query.findOne(function (err, doc) {
+    if (doc) {
+      res.render("home", {
+        contents: doc,
+      });
+    } else {
+      res.status(404).render("404");
+    }
   });
 });
 
@@ -60,40 +71,42 @@ app.get("/:id", function (req, res) {
   if (title == "compose") {
     res.render("compose");
   } else {
-    const content = findContentByTitle(title, systemDatabase);
-    if (content) {
-      res.render("menu", {
-        contents: new contentObject(content),
-      });
-    } else {
-      res.status(404).render("404");
-    }
-  }
-});
-
-// object should be saved into database
-const userDatabase = [];
-app.get("/posts/:id", function (req, res) {
-  const title = _.lowerCase(req.params.id);
-  const content = findContentByTitle(title, userDatabase);
-  console.log(userDatabase);
-  console.log(content);
-  if (content) {
-    res.render("post", {
-      contents: new contentObject(content),
+    const query = SystemContent.where({ title: _.lowerCase(title) });
+    query.findOne(function (err, doc) {
+      if (doc) {
+        res.render("menu", {
+          contents: doc,
+        });
+      } else {
+        res.status(404).render("404");
+      }
     });
-  } else {
-    res.status(404).render("404");
   }
 });
 
-app.post("/compose", function (req, res) {
-  userDatabase.push({
-    title: req.body.postTitle,
-    body: req.body.postBody,
-  });
-  res.redirect("/");
-});
+// // object should be saved into database
+// const userDatabase = [];
+// app.get("/posts/:id", function (req, res) {
+//   const title = _.lowerCase(req.params.id);
+//   const content = findContentByTitle(title, userDatabase);
+//   console.log(userDatabase);
+//   console.log(content);
+//   if (content) {
+//     res.render("post", {
+//       contents: new contentObject(content),
+//     });
+//   } else {
+//     res.status(404).render("404");
+//   }
+// });
+
+// app.post("/compose", function (req, res) {
+//   userDatabase.push({
+//     title: req.body.postTitle,
+//     body: req.body.postBody,
+//   });
+//   res.redirect("/");
+// });
 
 const PORT = 2000;
 app.listen(PORT, function () {

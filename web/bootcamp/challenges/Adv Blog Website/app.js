@@ -47,12 +47,7 @@ SystemContent.find(function (err, docs) {
     }
   }
 });
-// Need to Fix (findOne)
-function findContentByTitle(title, array) {
-  return array.find((element) => element.title == _.lowerCase(title));
-}
 
-// Need to Fix (insertMany or find)
 app.get("/", function (req, res) {
   const query = SystemContent.where({ title: "home" });
   query.findOne(function (err, doc) {
@@ -84,29 +79,28 @@ app.get("/:id", function (req, res) {
   }
 });
 
-// // object should be saved into database
-// const userDatabase = [];
-// app.get("/posts/:id", function (req, res) {
-//   const title = _.lowerCase(req.params.id);
-//   const content = findContentByTitle(title, userDatabase);
-//   console.log(userDatabase);
-//   console.log(content);
-//   if (content) {
-//     res.render("post", {
-//       contents: new contentObject(content),
-//     });
-//   } else {
-//     res.status(404).render("404");
-//   }
-// });
+app.get("/posts/:id", function (req, res) {
+  const title = _.lowerCase(req.params.id);
+  const query = UserContent.where({ title: title });
+  query.findOne(function (err, doc) {
+    if (doc) {
+      res.render("post", {
+        contents: doc,
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
 
-// app.post("/compose", function (req, res) {
-//   userDatabase.push({
-//     title: req.body.postTitle,
-//     body: req.body.postBody,
-//   });
-//   res.redirect("/");
-// });
+app.post("/compose", function (req, res) {
+  const userContent = new UserContent({
+    title: _.lowerCase(req.body.postTitle),
+    body: req.body.postBody,
+  });
+  userContent.save();
+  res.redirect("/");
+});
 
 const PORT = 2000;
 app.listen(PORT, function () {

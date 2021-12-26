@@ -60,7 +60,10 @@ app.get("/", function (req, res) {
             userContents: docs,
           });
         } else {
-          res.status(404).render("404");
+          res.render("home", {
+            contents: doc,
+            userContents: null,
+          });
         }
       });
     } else {

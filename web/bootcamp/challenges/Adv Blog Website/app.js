@@ -9,6 +9,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(__dirname + "/public"));
+app.locals._ = _;
 
 mongoose.connect(
   `mongodb+srv://${account.id}:${account.passwd}@cluster0.zzv9r.mongodb.net/blogDB?retryWrites=true&w=majority`
@@ -49,11 +50,18 @@ SystemContent.find(function (err, docs) {
 });
 
 app.get("/", function (req, res) {
-  const query = SystemContent.where({ title: "home" });
-  query.findOne(function (err, doc) {
+  const systemQuery = SystemContent.where({ title: "home" });
+  systemQuery.findOne(function (err, doc) {
     if (doc) {
-      res.render("home", {
-        contents: doc,
+      UserContent.find(function (err, docs) {
+        if (docs.length !== 0) {
+          res.render("home", {
+            contents: doc,
+            userContents: docs,
+          });
+        } else {
+          res.status(404).render("404");
+        }
       });
     } else {
       res.status(404).render("404");
@@ -80,8 +88,8 @@ app.get("/:id", function (req, res) {
 });
 
 app.get("/posts/:id", function (req, res) {
-  const title = _.lowerCase(req.params.id);
-  const query = UserContent.where({ title: title });
+  const id = req.params.id;
+  const query = UserContent.where({ _id: id });
   query.findOne(function (err, doc) {
     if (doc) {
       res.render("post", {
@@ -98,8 +106,11 @@ app.post("/compose", function (req, res) {
     title: _.lowerCase(req.body.postTitle),
     body: req.body.postBody,
   });
-  userContent.save();
-  res.redirect("/");
+  userContent.save(function (err) {
+    if (!err) {
+      res.redirect("/");
+    }
+  });
 });
 
 const PORT = 2000;

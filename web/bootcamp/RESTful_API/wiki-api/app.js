@@ -26,6 +26,20 @@ app.get("/articles", function (req, res) {
   });
 });
 
+app.post("/articles", function (req, res) {
+  const article = new Article({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  article.save(function (err) {
+    if (!err) {
+      res.sendStatus(200);
+    } else {
+      res.send(err);
+    }
+  });
+});
+
 const port = 3000;
 app.listen(port, function () {
   console.log(`wiki-api app listening at http://localhost:${port}`);

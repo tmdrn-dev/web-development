@@ -40,6 +40,54 @@ app
     });
   })
   .delete(function (req, res) {
+    Article.deleteMany(function (err) {
+      if (!err) {
+        res.sendStatus(200);
+      } else {
+        res.send(err);
+      }
+    });
+  });
+
+app
+  .route("/articles/:title")
+  .get(function (req, res) {
+    const articleTitle = req.params.title;
+    Article.findOne({ title: articleTitle }, function (err, doc) {
+      if (!err) {
+        res.send(doc);
+      } else {
+        res.send(err);
+      }
+    });
+  })
+  .put(function (req, res) {
+    Article.findOneAndUpdate(
+      { title: req.params.title },
+      {
+        title: req.body.title,
+        content: req.body.content,
+      },
+      { overwrite: true },
+      function (err, doc) {
+        if (!err) {
+          res.sendStatus(200);
+        } else {
+          res.send(err);
+        }
+      }
+    );
+  })
+  .patch(function (req, res) {
+    Article.findOneAndUpdate({ title: req.params.title }, { $set: req.body }, function (err, doc) {
+      if (!err) {
+        res.sendStatus(200);
+      } else {
+        res.send(err);
+      }
+    });
+  })
+  .delete(function (req, res) {
     Article.deleteOne({ title: req.body.title }, function (err) {
       if (!err) {
         res.sendStatus(200);

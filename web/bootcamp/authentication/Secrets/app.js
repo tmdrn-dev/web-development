@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const md5 = require("md5");
-const app = express();
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
+const app = express();
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -26,18 +27,20 @@ app
   })
   .post(function (req, res) {
     const email = req.body.username;
-    const password = md5(req.body.password);
+    const password = req.body.password;
 
     User.findOne({ email: email }, function (err, doc) {
       if (err) {
         res.send(err);
       } else {
         if (doc) {
-          if (doc.password == password) {
-            res.render("secrets");
-          } else {
-            res.sendStatus(401);
-          }
+          bcrypt.compare(password, doc.password, function (err, result) {
+            if (result) {
+              res.render("secrets");
+            } else {
+              res.sendStatus(401);
+            }
+          });
         } else {
           res.sendStatus(404);
         }
@@ -51,28 +54,30 @@ app
     res.render("register");
   })
   .post(function (req, res) {
-    const userEmail = req.body.username;
-    User.findOne({ email: userEmail }, function (err, doc) {
-      if (err) {
-        res.send(err);
-      } else {
-        if (doc) {
-          res.sendStatus(409);
+    bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+      const userEmail = req.body.username;
+      User.findOne({ email: userEmail }, function (err, doc) {
+        if (err) {
+          res.send(err);
         } else {
-          const newUser = new User({
-            email: userEmail,
-            password: md5(req.body.password),
-          });
+          if (doc) {
+            res.sendStatus(409);
+          } else {
+            const newUser = new User({
+              email: userEmail,
+              password: hash,
+            });
 
-          newUser.save(function (err) {
-            if (err) {
-              res.send(err);
-            } else {
-              res.render("secrets");
-            }
-          });
+            newUser.save(function (err) {
+              if (err) {
+                res.send(err);
+              } else {
+                res.render("secrets");
+              }
+            });
+          }
         }
-      }
+      });
     });
   });
 

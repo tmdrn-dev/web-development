@@ -14,7 +14,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    cookie: {},
   })
 );
 app.use(passport.initialize());
@@ -43,14 +43,56 @@ app
   .get(function (req, res) {
     res.render("login");
   })
-  .post(function (req, res) {});
+  .post(function (req, res) {
+    const user = new User({
+      username: req.body.username,
+      password: req.body.password,
+    });
+
+    req.login(user, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        const authenticate = passport.authenticate("local");
+        authenticate(req, res, function () {
+          res.redirect("/secrets");
+        });
+      }
+    });
+  });
+
+app.route("/logout").get(function (req, res) {
+  req.logout();
+  res.redirect("/");
+});
 
 app
   .route("/register")
   .get(function (req, res) {
     res.render("register");
   })
-  .post(function (req, res) {});
+  .post(function (req, res) {
+    User.register({ username: req.body.username }, req.body.password, function (err, user) {
+      if (err) {
+        console.log(err);
+        res.redirect("/register");
+      } else {
+        const authenticate = passport.authenticate("local");
+        authenticate(req, res, function () {
+          res.redirect("/secrets");
+        });
+      }
+    });
+  });
+
+app.route("/secrets").get(function (req, res) {
+  if (req.isAuthenticated()) {
+    res.render("secrets");
+  } else {
+    console.log("ERR: not authenticated request!");
+    res.redirect("/");
+  }
+});
 
 const port = 3000;
 app.listen(port, function () {

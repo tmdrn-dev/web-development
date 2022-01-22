@@ -26,6 +26,7 @@ mongoose.connect("mongodb://localhost:27017/userDB");
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
+  googleId: String,
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -34,8 +35,13 @@ userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
 
 passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
 
 passport.use(
   new GoogleStrategy(
@@ -46,6 +52,8 @@ passport.use(
       //userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     },
     function (accessToken, refreshToken, profile, cb) {
+      console.log(profile);
+
       User.findOrCreate({ googleId: profile.id }, function (err, user) {
         return cb(err, user);
       });
@@ -56,6 +64,16 @@ passport.use(
 app.route("/").get(function (req, res) {
   res.render("home");
 });
+
+app.get("/auth/google", passport.authenticate("google", { scope: ["profile"] }));
+app.get(
+  "/auth/google/passport",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/secrets");
+  }
+);
 
 app
   .route("/login")

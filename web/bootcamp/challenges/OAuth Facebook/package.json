@@ -3,6 +3,9 @@
     "dotenv": "^14.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
-    "mongoose": "^6.1.7"
+    "express-session": "^1.17.2",
+    "mongoose": "^6.1.7",
+    "passport": "^0.5.2",
+    "passport-facebook": "^3.0.0"
   }
 }

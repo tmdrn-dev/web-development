@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-const author = "Seungku Choi";
-const date = new Date();
+const img = "https://picsum.photos/200";
 
 ReactDOM.render(
   <div>
-    <p>Created by {author}</p>
-    <p>Copyright {date.getFullYear()}</p>
+    <h1 className="heading">My Favourite Foods</h1>
+    <div>
+      <img src={img + "?grayscale"} alt="random"></img>
+    </div>
   </div>,
   document.getElementById("root")
 );

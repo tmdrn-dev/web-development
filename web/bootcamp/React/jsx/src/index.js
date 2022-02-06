@@ -1,14 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-const img = "https://picsum.photos/200";
+const myStyle = {
+  color: "red",
+  fontSize: "20px",
+  border: "1px solid black",
+};
 
-ReactDOM.render(
-  <div>
-    <h1 className="heading">My Favourite Foods</h1>
-    <div>
-      <img src={img + "?grayscale"} alt="random"></img>
-    </div>
-  </div>,
-  document.getElementById("root")
-);
+myStyle.color = "blue";
+
+ReactDOM.render(<h1 style={myStyle}>Hello World!</h1>, document.getElementById("root"));

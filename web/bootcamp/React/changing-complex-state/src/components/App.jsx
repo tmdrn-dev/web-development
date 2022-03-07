@@ -1,24 +1,34 @@
 import React from "react";
 
 function App() {
-  const [userName, setUserName] = React.useState({ fName: "", lName: "" });
+  const [contact, setContact] = React.useState({
+    fName: "",
+    lName: "",
+    email: "",
+  });
 
   function handleOnChange(event) {
     const { name, value } = event.target;
 
-    console.log(value);
-    console.log(name);
-
-    setUserName((preValue) => {
+    setContact((prevContact) => {
       if (name === "fName") {
         return {
           fName: value,
-          lName: preValue.lName
+          lName: prevContact.lName,
+          email: prevContact.email,
+        };
+      } else if (name === "lName") {
+        return {
+          fName: prevContact.fName,
+          lName: value,
+          email: prevContact.email,
         };
       } else {
+        // email
         return {
-          fName: preValue.fName,
-          lName: value
+          fName: prevContact.fName,
+          lName: prevContact.lName,
+          email: value,
         };
       }
     });
@@ -27,21 +37,23 @@ function App() {
   return (
     <div className="container">
       <h1>
-        Hello {userName.fName} {userName.lName}
+        Hello {contact.fName} {contact.lName}
       </h1>
+      <p>{contact.email}</p>
       <form>
         <input
           onChange={handleOnChange}
           name="fName"
           placeholder="First Name"
-          value={userName.fName}
+          value={contact.fName}
         />
         <input
           onChange={handleOnChange}
           name="lName"
           placeholder="Last Name"
-          value={userName.lName}
+          value={contact.lName}
         />
+        <input onChange={handleOnChange} name="email" placeholder="Email" value={contact.email} />
         <button>Submit</button>
       </form>
     </div>

@@ -1,15 +1,13 @@
 import React from "react";
 
-function ToDoItem(prop) {
+function ToDoItem(props) {
   return (
     <div
       onClick={() => {
-        console.log(prop.id);
-
-        prop.callback(prop.id);
+        props.onChecked(props.id);
       }}
     >
-      <li>{prop.text}</li>
+      <li>{props.text}</li>
     </div>
   );
 }
